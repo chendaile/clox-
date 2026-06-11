@@ -1,0 +1,45 @@
+{
+        "tasks": [
+                {
+                        "type": "cppbuild",
+                        "label": "编译",
+                        "command": "cl.exe",
+                        "args": [
+                                "/utf-8",
+                                "/Zi",
+                                "/EHsc",
+                                "/nologo",
+                                "/Fe${fileDirname}\\${fileBasenameNoExtension}.exe",
+                                "${file}"
+                        ],
+                        "options": {
+                                "cwd": "${fileDirname}"
+                        },
+                        "problemMatcher": ["$msCompile"],
+                        "group": {
+                                "kind": "build",
+                                "isDefault": false
+                        },
+                        "detail": "编译当前文件"
+                },
+                {
+                        "label": "编译并运行",
+                        "type": "shell",
+                        "command": "cmd /c chcp 65001>nul && cl.exe /utf-8 /nologo /Fe${fileDirname}\\${fileBasenameNoExtension}.exe ${file} && ${fileDirname}\\${fileBasenameNoExtension}.exe",
+                        "options": {
+                                "cwd": "${fileDirname}",
+                                "shell": {
+                                        "executable": "cmd.exe",
+                                        "args": ["/d", "/c"]
+                                }
+                        },
+                        "problemMatcher": ["$msCompile"],
+                        "group": {
+                                "kind": "build",
+                                "isDefault": false
+                        },
+                        "detail": "编译当前文件并立即运行"
+                }
+        ],
+        "version": "2.0.0"
+}
