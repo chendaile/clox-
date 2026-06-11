@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 // Token 类型枚举
 typedef enum {
@@ -97,7 +99,46 @@ TokenType str2token(char* s) {
     return TOKEN_IDENTIFIER;
 }
 
+char** getTokens (char* s, int* tokenLength) {
+    char** output = malloc(100 * sizeof(char*));
+    int outIdx = 0;
+
+    char buffer[256];
+    int bufIdx = 0;
+
+    int i = 0;
+    while (s[i] != '\0') {
+        if (isspace(s[i])) {
+            if (bufIdx > 0) {buffer[bufIdx] = '\0';
+            output[outIdx++] = _strdup(buffer);
+            bufIdx = 0;}
+        } else {
+            buffer[bufIdx++] = s[i];
+        }
+        i++;
+    }
+    if (bufIdx > 0) {
+        buffer[bufIdx] = '\0';
+        output[outIdx++] = _strdup(buffer);
+    }
+
+    *tokenLength = outIdx;    // outIdx 就是个数，不需要 +1
+    return output;
+}
+
 int main() {
-    printf("%d", str2token("("));
+    char* source = "var x = 42; print (123)";
+    int count;
+
+    char** tokens = getTokens(source, &count);
+
+    printf("源码: %s\n", source);
+    printf("切出 %d 个词素:\n", count);
+    for (int i = 0; i < count; i++) {
+        printf("  [%d] \"%s\" -> TokenType=%d\n",
+               i, tokens[i], str2token(tokens[i]));
+        free(tokens[i]);    // 释放 _strdup 分配的内存
+    }
+    free(tokens);           // 释放 output 数组
     return 0;
 }
